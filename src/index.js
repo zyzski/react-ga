@@ -46,7 +46,7 @@ function _gaCommand(trackerNames, ...args) {
 
     internalGa(...args);
     if (Array.isArray(trackerNames)) {
-      trackerNames.forEach(name => {
+      trackerNames.forEach((name) => {
         internalGa(...[`${name}.${command}`].concat(args.slice(1)));
       });
     }
@@ -76,6 +76,7 @@ function _initialize(gaTrackingID, options) {
   }
 }
 
+
 export function initialize(configsOrTrackingId, options) {
   if (options && options.testMode === true) {
     _testMode = true;
@@ -88,7 +89,7 @@ export function initialize(configsOrTrackingId, options) {
   }
 
   if (Array.isArray(configsOrTrackingId)) {
-    configsOrTrackingId.forEach(config => {
+    configsOrTrackingId.forEach((config) => {
       if (typeof config !== 'object') {
         warn('All configs must be an object');
         return;
@@ -109,7 +110,7 @@ export function ga(...args) {
   if (args.length > 0) {
     internalGa(...args);
     if (_debug) {
-      log("called ga('arguments');");
+      log('called ga(\'arguments\');');
       log(`with arguments: ${JSON.stringify(args)}`);
     }
   }
@@ -141,7 +142,7 @@ export function set(fieldsObject, trackerNames) {
   _gaCommand(trackerNames, 'set', fieldsObject);
 
   if (_debug) {
-    log("called ga('set', fieldsObject);");
+    log('called ga(\'set\', fieldsObject);');
     log(`with fieldsObject: ${JSON.stringify(fieldsObject)}`);
   }
 }
@@ -157,7 +158,7 @@ export function set(fieldsObject, trackerNames) {
 export function send(fieldObject, trackerNames) {
   _gaCommand(trackerNames, 'send', fieldObject);
   if (_debug) {
-    log("called ga('send', fieldObject);");
+    log('called ga(\'send\', fieldObject);');
     log(`with fieldObject: ${JSON.stringify(fieldObject)}`);
     log(`with trackers: ${JSON.stringify(trackerNames)}`);
   }
@@ -191,11 +192,11 @@ export function pageview(rawPath, trackerNames, title) {
     _gaCommand(trackerNames, 'send', {
       hitType: 'pageview',
       page: path,
-      ...extraFields,
+      ...extraFields
     });
 
     if (_debug) {
-      log("called ga('send', 'pageview', path);");
+      log('called ga(\'send\', \'pageview\', path);');
       let extraLog = '';
       if (title) {
         extraLog = ` and title: ${title}`;
@@ -230,7 +231,7 @@ export function modalview(rawModalName, trackerNames) {
     _gaCommand(trackerNames, 'send', 'pageview', path);
 
     if (_debug) {
-      log("called ga('send', 'pageview', path);");
+      log('called ga(\'send\', \'pageview\', path);');
       log(`with path: ${path}`);
     }
   }
@@ -245,17 +246,12 @@ export function modalview(rawModalName, trackerNames) {
  * @param args.label  {String} required
  * @param {Array} trackerNames - (optional) a list of extra trackers to run the command on
  */
-export function timing(
-  { category, variable, value, label } = {},
-  trackerNames
-) {
+export function timing({ category, variable, value, label } = {}, trackerNames) {
   if (typeof ga === 'function') {
     if (!category || !variable || !value || typeof value !== 'number') {
-      warn(
-        'args.category, args.variable ' +
-          'AND args.value are required in timing() ' +
-          'AND args.value has to be a number'
-      );
+      warn('args.category, args.variable ' +
+            'AND args.value are required in timing() ' +
+            'AND args.value has to be a number');
       return;
     }
 
@@ -264,7 +260,7 @@ export function timing(
       hitType: 'timing',
       timingCategory: _format(category),
       timingVar: _format(variable),
-      timingValue: value,
+      timingValue: value
     };
 
     if (label) {
@@ -285,10 +281,7 @@ export function timing(
  * @param args.nonInteraction {boolean} optional
  * @param {Array} trackerNames - (optional) a list of extra trackers to run the command on
  */
-export function event(
-  { category, action, label, value, nonInteraction, transport, ...args } = {},
-  trackerNames
-) {
+export function event({ category, action, label, value, nonInteraction, transport, ...args } = {}, trackerNames) {
   if (typeof ga === 'function') {
     // Simple Validation
     if (!category || !action) {
@@ -300,7 +293,7 @@ export function event(
     const fieldObject = {
       hitType: 'event',
       eventCategory: _format(category),
-      eventAction: _format(action),
+      eventAction: _format(action)
     };
 
     // Optional Fields
@@ -329,9 +322,7 @@ export function event(
         warn('`args.transport` must be a string.');
       } else {
         if (['beacon', 'xhr', 'image'].indexOf(transport) === -1) {
-          warn(
-            '`args.transport` must be either one of these values: `beacon`, `xhr` or `image`'
-          );
+          warn('`args.transport` must be either one of these values: `beacon`, `xhr` or `image`');
         }
 
         fieldObject.transport = transport;
@@ -340,13 +331,13 @@ export function event(
 
     Object.keys(args)
       .filter(key => key.substr(0, 'dimension'.length) === 'dimension')
-      .forEach(key => {
+      .forEach((key) => {
         fieldObject[key] = args[key];
       });
 
     Object.keys(args)
       .filter(key => key.substr(0, 'metric'.length) === 'metric')
-      .forEach(key => {
+      .forEach((key) => {
         fieldObject[key] = args[key];
       });
 
@@ -366,7 +357,7 @@ export function exception({ description, fatal }, trackerNames) {
   if (typeof ga === 'function') {
     // Required Fields
     const fieldObject = {
-      hitType: 'exception',
+      hitType: 'exception'
     };
 
     // Optional Fields
@@ -466,11 +457,7 @@ export const plugin = {
           ga(command, actionType, payload);
           if (_debug) {
             log(`called ga('${command}');`);
-            log(
-              `actionType: "${actionType}" with payload: ${JSON.stringify(
-                payload
-              )}`
-            );
+            log(`actionType: "${actionType}" with payload: ${JSON.stringify(payload)}`);
           }
         } else if (payload) {
           ga(command, payload);
@@ -486,7 +473,7 @@ export const plugin = {
         }
       }
     }
-  },
+  }
 };
 
 /**
@@ -513,7 +500,7 @@ export function outboundLink(args, hitCallback, trackerNames) {
       hitType: 'event',
       eventCategory: 'Outbound',
       eventAction: 'Click',
-      eventLabel: _format(args.label),
+      eventLabel: _format(args.label)
     };
 
     let safetyCallbackCalled = false;
@@ -568,5 +555,5 @@ export default {
   plugin,
   outboundLink,
   OutboundLink,
-  testModeAPI: TestModeAPI,
+  testModeAPI: TestModeAPI
 };
