@@ -25,7 +25,7 @@ let _testMode = false;
 
 const internalGa = (...args) => {
   if (_testMode) return TestModeAPI.ga(...args);
-  if (!window.ga && process.env.NODE_ENV !== 'production')
+  if (!window.ga && process.env.NODE_ENV === 'production')
     return warn(
       'ReactGA.initialize must be called first or GoogleAnalytics should be loaded manually'
     );
