@@ -1,4 +1,3 @@
-import mightBeEmail from './mightBeEmail';
 import toTitleCase from './toTitleCase';
 
 export default function format(s, titleCase) {
